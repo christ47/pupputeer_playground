@@ -1,0 +1,13 @@
+{
+  "name": "puppeteer test framework",
+"version": "1.0.0",
+"description": "",
+"scripts": {
+  "start": "node app.js",
+  "test": "echo \"Error: no test specified\" && exit"
+},
+"license": "ISC",
+  "dependencies": {
+    "puppeteer": "^2.0.0"
+  }
+}
