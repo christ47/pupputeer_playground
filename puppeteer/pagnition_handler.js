@@ -1,18 +1,26 @@
  const puppeteer = require('puppeteer');
- async function run(pageToScrape){
+ async function run(pagesToScrape){
     return await new Promise(async (resolve, reject) => {
       try {
 
-      if(!pageToScrape) {
-        pageToScrape = 1;
+      if(!pagesToScrape) {
+        pagesToScrape = 1;
 
       }
-      const browser = await puppeteer.launch();
+      const browser = await puppeteer.launch({
+        headless: false,
+        timeout: 15000,
+        // env: {
+        //
+        // }
+        userDataDir: './data'
+        // performance boasting as cookies and caches are saved rather than redownloading through chrome
+      });
       const page = await browser.newPage();
       await page.goto('https://news.ycombinator.com/');
       let currentPage = 1;
       let urls = [];
-      while(currentPage <= pageToScrape) {
+      while(currentPage <= pagesToScrape) {
         let newUrls = await page.evaluate(()=> {
           let results = [];
           let items = document.querySelectorAll('a.storylink');
@@ -25,7 +33,7 @@
           return results;
       });
       urls = urls.concat(newUrls);
-      if(currentPage < pageToScrape){
+      if(currentPage < pagesToScrape){
         await Promise.all([
           page.click('a.morelink'),
           page.waitForSelector('a.storylink'),
@@ -37,6 +45,9 @@
       browser.close();
       return resolve(urls);
     } catch (err) {
+        if(err instanceof puppeteer.errors.TimeoutError){
+          console.error(err);
+        }
             reject(err);
             browser.close();
     }
