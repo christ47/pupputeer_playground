@@ -39,6 +39,20 @@ async () => {
       ...calculateUsedBytes('css', cssCoverage)
     ]);
 
+//analysing load times through metrics
+
+  // Executes Navigation API within the page context
+  const metrics = await page.evaluate(() => JSON.stringify(window.performance));
+
+  // Parses the result to JSON
+  console.info(JSON.parse(metrics));
+//needs to be in its own module
+
+//analyzing runttime
+// Returns runtime metrics of the page
+  const runtimeMetrics = await page.metrics();
+  console.info(runtimeMetrics);
+
   await page.setViewport({ width: 1920, height: 1080 });
   await page.focus('[es-test="example-locator"]');
   await page.keyboard.type('Keyboard', { delay: 100 });
@@ -59,6 +73,9 @@ await page.setGeolocation({ latitude: 90, longitude: 0 });
   quality: 80
   // clip: { x: 220, y: 0, width: 630, height: 360 }
 });
+
+const tweetHandle = await page.$('.tweet .retweets');
+expect(await tweetHandle.evaluate(node => node.innerText)).toBe('10');
 
 await browser.close();
 }
