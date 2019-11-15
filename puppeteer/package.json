@@ -4,7 +4,7 @@
 "description": "",
 "scripts": {
   "start": "node app.js",
-  "test": "node combination-scrapper && node pagnition_handler
+  "test": "node test/combination-scrapper && node test/pagnition_handler"
 },
 "license": "ISC",
   "dependencies": {
